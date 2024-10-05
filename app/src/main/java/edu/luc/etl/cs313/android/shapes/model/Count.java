@@ -8,43 +8,53 @@ public class Count implements Visitor<Integer> {
 
     // TODO entirely your job
 
+    private int count = 0;
+
     @Override
     public Integer onPolygon(final Polygon p) {
-        return -1;
+        for (Point point : p.getPoints()) {
+            count++;
+        }
+        return count;
     }
 
     @Override
     public Integer onCircle(final Circle c) {
-        return -1;
+        count++;
+        return count;
     }
 
     @Override
     public Integer onGroup(final Group g) {
-        return -1;
+        for (Shape shape : g.getShapes()) {
+            shape.accept(this);
+        }
+        return count;
     }
 
     @Override
     public Integer onRectangle(final Rectangle q) {
-        return -1;
+        count++;
+        return count;
     }
 
     @Override
     public Integer onOutline(final Outline o) {
-        return -1;
+        return o.getShape().accept(this);
     }
 
     @Override
     public Integer onFill(final Fill c) {
-        return -1;
+        return c.getShape().accept(this);
     }
 
     @Override
     public Integer onLocation(final Location l) {
-        return -1;
+        return l.getShape().accept(this);
     }
 
     @Override
     public Integer onStrokeColor(final StrokeColor c) {
-        return -1;
+        return c.getShape().accept(this);
     }
 }
