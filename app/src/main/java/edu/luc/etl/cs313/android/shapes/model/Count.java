@@ -12,30 +12,30 @@ public class Count implements Visitor<Integer> {
 
     @Override
     public Integer onPolygon(final Polygon p) {
-        for (Point point : p.getPoints()) {
-            count++;
-        }
-        return count;
+//        for (Point point : p.getPoints()) {
+//            count++;
+//        }
+//        return count;
+        return 1;
     }
 
     @Override
     public Integer onCircle(final Circle c) {
-        count++;
-        return count;
+        return 1;
     }
 
     @Override
     public Integer onGroup(final Group g) {
+        int  groupCount = 0;
         for (Shape shape : g.getShapes()) {
-            shape.accept(this);
+            groupCount += shape.accept(this);
         }
-        return count;
+        return groupCount;
     }
 
     @Override
     public Integer onRectangle(final Rectangle q) {
-        count++;
-        return count;
+        return 1;
     }
 
     @Override
