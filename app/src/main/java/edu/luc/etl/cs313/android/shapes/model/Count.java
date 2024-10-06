@@ -6,7 +6,7 @@ package edu.luc.etl.cs313.android.shapes.model;
  */
 public class Count implements Visitor<Integer> {
 
-    // TODO entirely your job
+    // DONE entirely your job
 
     private int count = 0;
 

@@ -13,12 +13,11 @@ public class Draw implements Visitor<Void> {
     // TODO entirely your job (except onCircle)
 
     private final Canvas canvas;
-
     private final Paint paint;
 
     public Draw(final Canvas canvas, final Paint paint) {
-        this.canvas = null; // FIXME
-        this.paint = null; // FIXME
+        this.canvas = canvas; // FIXED
+        this.paint = paint; // FIXED
         paint.setStyle(Style.STROKE);
     }
 
