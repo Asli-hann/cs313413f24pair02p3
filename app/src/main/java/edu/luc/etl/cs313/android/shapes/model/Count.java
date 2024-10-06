@@ -8,7 +8,7 @@ public class Count implements Visitor<Integer> {
 
     // DONE entirely your job
 
-    private int count = 0;
+//    private int count = 0;
 
     @Override
     public Integer onPolygon(final Polygon p) {

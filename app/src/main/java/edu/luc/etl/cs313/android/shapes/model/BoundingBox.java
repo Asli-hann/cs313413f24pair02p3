@@ -7,8 +7,7 @@ package edu.luc.etl.cs313.android.shapes.model;
  */
 public class BoundingBox implements Visitor<Location> {
 
-    // TODO entirely your job (except onCircle)
-    private int minX, minY, maxX, maxY;
+    // DONE entirely your job (except onCircle)
 
     @Override
     public Location onCircle(final Circle c) {
@@ -23,7 +22,35 @@ public class BoundingBox implements Visitor<Location> {
 
     @Override
     public Location onGroup(final Group g) {
-        return null;
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (Shape shape : g.getShapes()) {
+            Location loc = shape.accept(this);
+
+            Shape boundingBoxShape = loc.getShape();
+
+            Rectangle boundingBox;
+            if (boundingBoxShape instanceof Rectangle) {
+                boundingBox = (Rectangle) boundingBoxShape;
+            } else {
+                continue;
+            }
+
+            int shapeMinX = loc.getX();
+            int shapeMinY = loc.getY();
+            int shapeMaxX = shapeMinX + boundingBox.getWidth();
+            int shapeMaxY = shapeMinY + boundingBox.getHeight();
+
+            minX = Math.min(minX, shapeMinX);
+            minY = Math.min(minY, shapeMinY);
+            maxX = Math.max(maxX, shapeMaxX);
+            maxY = Math.max(maxY, shapeMaxY);
+        }
+
+        return new Location(minX, minY, new Rectangle(maxX - minX, maxY - minY));
     }
 
     @Override
