@@ -28,33 +28,25 @@ public class Draw implements Visitor<Void> {
     }
 
     @Override
-    public Void onStrokeColor(final StrokeColor c) {
-        int originalColor = paint.getColor();  // Save the original color
-        paint.setColor(c.getColor());          // Set the stroke color
-        c.getShape().accept(this);             // Draw the shape with the new color
-        paint.setColor(originalColor);
+    public Void onStrokeColor(final StrokeColor c) { //DONE
+        int original_c = paint.getColor();
 
-       // paint.setColor(c.getColor());
+        paint.setColor(c.getColor());
+        c.getShape().accept(this);
 
-//        if(paint.getStyle()!=Style.FILL){
-//            paint.setStyle(Style.STROKE);
-//        }
-//        else {
-//            paint.setStyle(Style.FILL_AND_STROKE);
-//        }
-        //c.getShape().accept(this);
+        paint.setColor(original_c);
+
         return null;
     }
 
     @Override
-    public Void onFill(final Fill f) {
-        if(paint.getStyle()!=Style.STROKE){
-            paint.setStyle(Style.FILL);
-        }
-        else {
-            paint.setStyle(Style.FILL_AND_STROKE);
-        }
+    public Void onFill(final Fill f) { //DONE
+        Style original = paint.getStyle();
+
+        paint.setStyle(Style.FILL_AND_STROKE);
         f.getShape().accept(this);
+        paint.setStyle(original);
+
         return null;
     }
 
@@ -83,36 +75,33 @@ public class Draw implements Visitor<Void> {
 
     @Override
     public Void onOutline(Outline o) { //DONE
+        Style original = paint.getStyle();
+
+        paint.setStyle(Style.STROKE);
         o.getShape().accept(this);
+        paint.setStyle(original);
         return null;
     }
 
     @Override
-    public Void onPolygon(final Polygon s) {
+    public Void onPolygon(final Polygon s) { //DONE
 
-        final float[] pts = new float[s.getPoints().size() * 4];
-        int i=0;
+        final int total_pts = s.getPoints().size();
 
-        for(Point point:s.getPoints()){
-            pts[i]= point.getX();
-            pts[i+1]= point.getY();
-            pts[i+2]=point.getX();
-            pts[i+3]=point.getY();
-            i=i+4;
+        final float[] points = new float[4 * total_pts];
+        int j = 0;
+
+        for (int i = 0; i < total_pts; i++) {
+            Point point_1 = s.getPoints().get(i);
+            Point point_2 = s.getPoints().get((i + 1) % total_pts);
+
+            points[j++] = point_1.getX();
+            points[j++] = point_1.getY();
+            points[j++] = point_2.getX();
+            points[j++] = point_2.getY();
         }
-//        for (int i = 0; i < points.size(); i++) {
-//            Point p1 = points.get(i);
-//            Point p2 = points.get((i + 1) % points.size()); // Wrap around to the first point for the last line
-//
-//            // Set the coordinates for each line (x1, y1, x2, y2)
-//            pts[i * 4]     = p1.getX();  // x1
-//            pts[i * 4 + 1] = p1.getY();  // y1
-//            pts[i * 4 + 2] = p2.getX();  // x2
-//            pts[i * 4 + 3] = p2.getY();  // y2
-//        }
 
-
-        canvas.drawLines(pts, paint);
+        canvas.drawLines(points, paint);
         return null;
     }
 }
