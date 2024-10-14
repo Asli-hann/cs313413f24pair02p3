@@ -5,6 +5,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import edu.luc.etl.cs313.android.shapes.model.*;
 
+import java.util.ArrayList;
+
 /**
  * A Visitor for drawing a shape to an Android canvas.
  */
@@ -86,22 +88,26 @@ public class Draw implements Visitor<Void> {
     @Override
     public Void onPolygon(final Polygon s) { //DONE
 
-        final int total_pts = s.getPoints().size();
-
-        final float[] points = new float[4 * total_pts];
-        int j = 0;
-
-        for (int i = 0; i < total_pts; i++) {
-            Point point_1 = s.getPoints().get(i);
-            Point point_2 = s.getPoints().get((i + 1) % total_pts);
-
-            points[j++] = point_1.getX();
-            points[j++] = point_1.getY();
-            points[j++] = point_2.getX();
-            points[j++] = point_2.getY();
+        ArrayList<Float> arr = new ArrayList<>();
+        int cnt = 0;
+        for (Shape shape : s.getShapes()) {
+            Location location = (Location) shape;
+            arr.add((float) location.getX());
+            arr.add((float) location.getY());
+            if (cnt > 0) {
+                arr.add((float) location.getX());
+                arr.add((float) location.getY());
+            }
+            cnt++;
+        }
+        arr.add(arr.get(0));
+        arr.add(arr.get(1));
+        float[] res = new float[arr.size()];
+        for (int i = 0; i < arr.size(); i++) {
+            res[i] = arr.get(i);
         }
 
-        canvas.drawLines(points, paint);
+        canvas.drawLines(res, paint);
         return null;
     }
 }
